@@ -4,6 +4,8 @@
 #include <netdb.h>
 #include <cstring>
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 /*Taken directly from Beej Guide with some minor modifications
