@@ -29,6 +29,7 @@ public class ChatServe {
 
                 //Check if is null if so check check again
                 if((inputLine = in.readLine()) == null){
+                    System.out.println("Continuing");
                     continue;
                 }
 
