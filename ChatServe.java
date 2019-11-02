@@ -32,7 +32,7 @@ public class ChatServe {
                 }
 
                 //Write message to receiving client
-                out.println(inputLine);
+                System.out.println(inputLine);
 
                 /*If quit message is received terminate program
                  */
@@ -50,5 +50,3 @@ public class ChatServe {
         }
     }
 }
-
-
