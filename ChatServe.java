@@ -12,7 +12,6 @@ public class ChatServe {
         System.out.println("Please enter port number:");
         //Waits for int to be entered from command line - !not input safe
         int portNumber = scanner.nextInt();
-        System.out.println(portNumber);
         //TODO NO must be command line
 
         //From https://docs.oracle.com/javase/tutorial/networking/sockets/clientServer.html
@@ -22,7 +21,7 @@ public class ChatServe {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()))){
 
-            System.out.println("The server is ready to receive");
+            System.out.println("The server is ready to receive messages");
 
 
             String inputLine;
@@ -51,3 +50,5 @@ public class ChatServe {
         }
     }
 }
+
+
