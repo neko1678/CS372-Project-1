@@ -27,6 +27,8 @@ public class ChatServe {
             String inputLine;
             while (true) {
                 //Check if is null if so check check again
+                inputLine = "";
+                
                 if((inputLine = in.readLine()) == null){
                     continue;
                 }
