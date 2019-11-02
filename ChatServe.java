@@ -27,10 +27,8 @@ public class ChatServe {
 
             String inputLine;
             while (true) {
-                System.out.println("IN Loop");
                 //Check if is null if so check check again
                 if((inputLine = in.readLine()) == null){
-                    System.out.println("Continuing");
                     continue;
                 }
 
@@ -53,5 +51,3 @@ public class ChatServe {
         }
     }
 }
-
-
