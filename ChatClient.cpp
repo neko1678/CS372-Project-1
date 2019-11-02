@@ -69,8 +69,12 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
 void chatWithHost(int socketDes, addrinfo* res){
     char *msg = "Test";
     while(1){
-        printf("Sending Message: %s\n", msg);
-        send(socketDes,msg, strlen(msg), 0);
+        printf("Sending Message: %s", msg);
+        int status = send(socketDes,msg, strlen(msg), 0);
+
+        if(status == -1){
+            fprintf(stderr,"Error When Sending Message");
+        }
     }
 }
 
