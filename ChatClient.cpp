@@ -67,10 +67,10 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
 }
 
 void chatWithHost(int socketDes, addrinfo* res){
-    char* msg = "Test";
+    char *msg = "Test";
     while(1){
+        printf("Sending Message: %s\n", msg);
         send(socketDes,msg, strlen(msg), 0);
-        usleep(10);
     }
 }
 
@@ -86,7 +86,6 @@ int main(int argc, char *argv[]) {
     char userName[10];
     printf("Enter 10 character username: ");
     scanf("%s", userName);
-    printf("Username is: %s\n", userName);
 
     //Set up and connect
     struct addrinfo* res = getAddressInfo(argv[1], argv[2]);
