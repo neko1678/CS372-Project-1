@@ -68,9 +68,9 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
 
 void chatWithHost(int socketDes, std::string username){
     std::string output;
-    char outputBuffer[500];
+    char outputBuffer[513];
     memset(outputBuffer, 0, sizeof(outputBuffer));
-    char inputBuffer[500];
+    char inputBuffer[513];
     memset(inputBuffer, 0, sizeof(inputBuffer));
 
     username.append("> ");
@@ -108,6 +108,8 @@ void chatWithHost(int socketDes, std::string username){
             exit(0);
         }
         else{
+            std::cout << "Printing message\n";
+            std::cout << inputBuffer;
             printf("%s", inputBuffer);
         }
 
