@@ -73,10 +73,57 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
 }
 
 /*
- * primary function in which chat occurs
+ * Takes username buffer and socket description
+ * writes message to server
+ */
+void writeMessage(std::string username, char* outputBuffer, int socketDes){
+    std::string output;
+
+    getline(std::cin, output);
+
+    /*
+     * Checks for quit message
+     * If is - notify server, close socket, exit
+     */
+    if(output.compare("\\quit") == 0){
+        output.append("\n");
+        strcpy(outputBuffer, output.c_str());
+        send(socketDes, outputBuffer, strlen(outputBuffer), 0);
+        printf("Closing program...");
+        close(socketDes);
+        exit(0);
+    }
+    else{
+        output.append("\n");
+        std::string outputWithHandle = username;
+        outputWithHandle.append(output);
+        strcpy(outputBuffer, outputWithHandle.c_str());
+        send(socketDes, outputBuffer, strlen(outputBuffer), 0);
+    }
+}
+
+/*
+* Waits to recieve messages
+* Checks for quit message - if so close and exit
+* Print message
+*/
+void readMessage(int socketDes, char* inputBuffer){
+    recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
+    if(strstr(inputBuffer, "\\quit") != 0){
+        printf("Server quit. Closing program...");
+        close(socketDes);
+        exit(0);
+    }
+    else{
+        printf("%s", inputBuffer);
+    }
+}
+
+/*
+ * Primary function in which chat occurs
+ * Takes socket description and username as inputs
  */
 void chatWithHost(int socketDes, std::string username){
-    std::string output;
     char outputBuffer[513];
     memset(outputBuffer, 0, sizeof(outputBuffer));
     char inputBuffer[513];
@@ -84,49 +131,15 @@ void chatWithHost(int socketDes, std::string username){
 
     username.append("> ");
 
+    /*
+     * Where the chatting occurs
+     */
     while(1){
         std::cout << username;
 
-        //Gets input from commandline
-        getline(std::cin, output);
+        writeMessage(username, outputBuffer, socketDes);
 
-        /*
-         * Checks for quit message
-         * If is - notify server, close socket, exit
-         */
-        if(output.compare("\\quit") == 0){
-            output.append("\n");
-            strcpy(outputBuffer, output.c_str());
-            send(socketDes, outputBuffer, strlen(outputBuffer), 0);
-            printf("Closing program...");
-            close(socketDes);
-            exit(0);
-        }
-        /*
-         * writes message to server
-         */
-        else{
-            output.append("\n");
-            std::string outputWithHandle = username;
-            outputWithHandle.append(output);
-            strcpy(outputBuffer, outputWithHandle.c_str());
-            send(socketDes, outputBuffer, strlen(outputBuffer), 0);
-        }
-
-        /*
-         * Waits to recieve messages
-         * Checks for quit message - if so close and exit
-         * Print message
-         */
-        recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
-        if(strstr(inputBuffer, "\\quit") != 0){
-            printf("Server quit. Closing program...");
-            close(socketDes);
-            exit(0);
-        }
-        else{
-            printf("%s", inputBuffer);
-        }
+        readMessage(socketDes, inputBuffer);
 
         //Clears buffers
         memset(outputBuffer, 0 ,sizeof(outputBuffer));
