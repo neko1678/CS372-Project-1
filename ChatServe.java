@@ -33,41 +33,43 @@ public class ChatServe {
 
             handle += "> ";
 
-            Lock lock = new ReentrantLock();
+            String inputLine;
+            String outputLine;
+            Scanner scanner = new Scanner(System.in);
+            
+            while(true){
+                
+                if ((inputLine = in.readLine()) != null) {
+                    //If quit message is received terminate program
+                    if (inputLine.equals("\\quit")) {
+                        System.out.println("Client has disconnected. Closing program...");
+                        System.exit(0);
+                    }
+                    else {
+                        System.out.println(inputLine);
+                        System.out.println(handle);
+                    }
+                }
+                
+                outputLine = scanner.next();
+                if (outputLine.equals("\\quit")) {
+                    System.out.println("Closing program...");
+                    out.write("\\quit");
+                    System.exit(0);
+                }
+                else{
+                    out.write(outputLine);
+                    System.out.print(handle);
+                }
+                
+            }
 
-            ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
-            String finalHandle = handle;
 
-            executor.execute(() -> {
-                try {
-                    readMessages(in, finalHandle, lock);
-                }
-                catch (IOException e){
-                    System.err.println("IOException");
-                    System.exit(1);
-                }
-            });
-            executor.execute(() -> {
-                try {
-                    writeMessages(out, finalHandle, lock);
-                }
-                catch (IOException e){
-                    System.err.println("IOException");
-                    System.exit(1);
-                }
-            });
-
-            //Wait forever for threads to finish
-            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
         }
         catch (IOException e){
             System.err.println("IOException");
             //Terminates the program
-            System.exit(1);
-        }
-        catch (InterruptedException e){
-            System.err.println("Shutting down");
             System.exit(1);
         }
 
