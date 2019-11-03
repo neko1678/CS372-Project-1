@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <thread>
+#include <mutex>
 
 
 /*Taken directly from Beej Guide with some minor modifications
@@ -49,6 +51,7 @@ int createSocket(struct addrinfo* addressInfo){
     printf("Socket created...\n");
     return des;
 }
+
 /* From Beej guide
  * Takes struct addrinfo
  * Exits with error if fails
@@ -66,16 +69,75 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
-void chatWithHost(int socketDes, addrinfo* res){
-    char *msg = "Test";
-    while(1){
-        printf("Sending Message: %s", msg);
-        int status = send(socketDes,msg, strlen(msg), 0);
+void writeMessage(int socketDes, std::string handle, std::mutex lock){
+    char outputBuffer[500];
 
-        if(status == -1){
-            fprintf(stderr,"Error When Sending Message");
+    while(1){
+        scanf("%s", outputBuffer);
+
+        lock.lock();
+        if(strcmp(outputBuffer, "\\quit") == 0){
+            send(socketDes, outputBuffer, strlen(outputBuffer), 0);
+            printf("Closing program...");
+            close(socketDes);
+            exit(0);
         }
+        else{
+            //TODO add handle
+            send(socketDes, outputBuffer, strlen(outputBuffer), 0);
+        }
+        lock.unlock();
+
     }
+}
+
+void readMessage(int socketDes, std::string handle, std::mutex lock){
+    char inputBuffer[500];
+
+    while(1){
+        recv(socketDes, inputBuffer, 500, 0);
+
+        lock.lock();
+        if(strcmp(inputBuffer, "\\quit") == 0){
+            printf("Server quit. Closing program...");
+            close(socketDes);
+            exit(0);
+        }
+        else{
+            printf(inputBuffer);
+        }
+        lock.unlock();
+
+    }
+
+}
+
+void chatWithHost(int socketDes, struct addrinfo* res, std::string handle){
+
+    std::mutex lock;
+
+    std::thread writer(writeMessage, socketDes, handle, lock);
+    std::thread reader(readMessage, socketDes, handle, lock);
+
+
+    writer.join();
+    reader.join();
+
+    //Unreachable due to infinite loops in threads but good habit
+    close(socketDes);
+}
+
+
+
+std::string getHandle(){
+    char userName[10];
+    printf("Enter username: ");
+    scanf("%s", userName);
+
+    std::string handle = userName;
+    handle.append("> ");
+
+    return handle;
 }
 
 int main(int argc, char *argv[]) {
@@ -86,17 +148,15 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    //Set up user name
-    char userName[10];
-    printf("Enter 10 character username: ");
-    scanf("%s", userName);
 
     //Set up and connect
     struct addrinfo* res = getAddressInfo(argv[1], argv[2]);
     int socketDes = createSocket(res);
     connectToHost(res, socketDes);
 
-    chatWithHost(socketDes, res);
+    std::string handle = getHandle();
+
+    chatWithHost(socketDes, res, handle);
 
     return 0;
 }
