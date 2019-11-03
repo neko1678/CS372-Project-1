@@ -66,27 +66,31 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
-void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
-    char * outputBuffer;
+void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
+    std::string output;
     char inputBuffer[500];
-    size_t outputBufferSize = 500;
+
+    std::string handle = "> ";
+    handle.append(username);
 
     while(1){
-        printf("Testing");
-        printf("%s> ", handle);
-        printf("Here");
+        std::cout << handle;
 
-        getline(&outputBuffer, &outputBufferSize, stdin);
-
-        printf("Scanned");
-
-        if(strcmp(outputBuffer, "\\quit") == 0){
+        getline(std::cin, output);
+        
+        if(output.compare("/quit") == 0){
+            char* outputBuffer = new char[output.size()+1];
+            strcpy(outputBuffer, output.c_str());
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
             printf("Closing program...");
             close(socketDes);
             exit(0);
         }
         else{
+            std::string outputWithHandle = handle;
+            outputWithHandle.append(output);
+            char* outputBuffer = new char[outputWithHandle.size()+1];
+            strcpy(outputBuffer, outputWithHandle.c_str());
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
         }
 
@@ -106,10 +110,13 @@ void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
 
 
 
-void setHandle(char* username){
+std::string getHandle(){
     printf("Enter username: ");
-    size_t size = 10;
-    getline(&username, &size, stdin);
+
+    std::string username;
+    getline(std::cin, username);
+
+    return username;
 }
 
 int main(int argc, char *argv[]) {
@@ -126,8 +133,7 @@ int main(int argc, char *argv[]) {
     int socketDes = createSocket(res);
     connectToHost(res, socketDes);
 
-    char handle[10];
-    setHandle(handle);
+    std::string handle = getHandle();
 
     chatWithHost(socketDes, res, handle);
 
