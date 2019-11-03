@@ -72,7 +72,8 @@ void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
 
     while(1){
         printf("%s> ", handle);
-        scanf("%s", outputBuffer);
+        
+        fgets(outputBuffer, 500, stdin);
 
         printf("Scanned");
 
@@ -87,7 +88,7 @@ void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
         }
 
         printf("Waiting for message");
-        
+
         recv(socketDes, inputBuffer, 500, 0);
         if(strcmp(inputBuffer, "\\quit") == 0){
             printf("Server quit. Closing program...");
