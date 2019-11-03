@@ -36,9 +36,9 @@ public class ChatServe {
             String inputLine;
             String outputLine;
             Scanner scanner = new Scanner(System.in);
-            
+
             while(true){
-                
+
                 if ((inputLine = in.readLine()) != null) {
                     //If quit message is received terminate program
                     if (inputLine.equals("\\quit")) {
@@ -50,18 +50,19 @@ public class ChatServe {
                         System.out.println(handle);
                     }
                 }
-                
+
+                System.out.print(handle);
                 outputLine = scanner.next();
                 if (outputLine.equals("\\quit")) {
                     System.out.println("Closing program...");
-                    out.write("\\quit");
+                    out.write(outputLine);
                     System.exit(0);
                 }
                 else{
-                    out.write(outputLine);
+                    out.write(handle + outputLine);
                     System.out.print(handle);
                 }
-                
+
             }
 
 
