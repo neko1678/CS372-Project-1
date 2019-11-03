@@ -103,7 +103,7 @@ void chatWithHost(int socketDes, std::string username){
 
         recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
         std::cout << "Recieved message\n";
-        if(strstr(inputBuffer, "\\quit") != nullptr){
+        if(strstr(inputBuffer, "\\quit") != 0){
             printf("Server quit. Closing program...");
             close(socketDes);
             exit(0);
