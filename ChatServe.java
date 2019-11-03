@@ -43,7 +43,7 @@ public class ChatServe {
                 if ((inputLine = in.readLine()) != null) {
                     System.out.println("In recieved");
                     //If quit message is received terminate program
-                    if (inputLine.equals("\\quit")) {
+                    if (inputLine.contains("\\quit")) {
                         System.out.println("Client has disconnected. Closing program...");
                         System.exit(0);
                     }
