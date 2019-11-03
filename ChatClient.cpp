@@ -15,6 +15,7 @@ Client side of chat application
 
 
 /*Taken directly from Beej Guide with some minor modifications
+ * Takes character array of hostname and port number
  * Gets a struct with the address information from the system
 */
 struct addrinfo * getAddressInfo(char* hostName, char* portNumber) {
@@ -56,7 +57,7 @@ int createSocket(struct addrinfo* addressInfo){
 }
 
 /* From Beej guide
- * Takes struct addrinfo
+ * Takes struct addrinfo and socket description
  * Exits with error if fails
 */
 void connectToHost(struct addrinfo* addressInfo, int socketDes){
