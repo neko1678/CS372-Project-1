@@ -108,7 +108,8 @@ void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
 
 void setHandle(char* username){
     printf("Enter username: ");
-    scanf("%s", username);
+    size_t size = 10;
+    getline(&username, &size, stdin);
 }
 
 int main(int argc, char *argv[]) {
