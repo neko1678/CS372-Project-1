@@ -56,11 +56,12 @@ public class ChatServe {
                 outputLine = scanner.next();
                 if (outputLine.equals("\\quit")) {
                     System.out.println("Closing program...");
-                    out.println(outputLine);
+                    out.print(outputLine);
                     System.exit(0);
                 }
                 else{
-                    out.println(handle + outputLine);
+                    System.out.println("Sending message: " + outputLine);
+                    out.print(handle + outputLine);
                 }
             }
 
