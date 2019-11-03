@@ -1,3 +1,10 @@
+/*
+Neal Kornreich
+CS372 -Fall 2019
+Client side of chat application
+11/03/2019
+ */
+
 #include <iostream>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -82,7 +89,7 @@ void chatWithHost(int socketDes, std::string username){
 
         //Gets input from commandline
         getline(std::cin, output);
-        
+
         /*
          * Checks for quit message
          * If is - notify server, close socket, exit
