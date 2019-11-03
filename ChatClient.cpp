@@ -69,7 +69,7 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
-void writeMessage(int socketDes, std::string handle, std::mutex lock){
+void writeMessage(int socketDes, const std::string& handle, std::mutex &lock){
     char outputBuffer[500];
 
     while(1){
@@ -91,7 +91,7 @@ void writeMessage(int socketDes, std::string handle, std::mutex lock){
     }
 }
 
-void readMessage(int socketDes, std::string handle, std::mutex lock){
+void readMessage(int socketDes,const std::string& handle, std::mutex &lock){
     char inputBuffer[500];
 
     while(1){
@@ -112,13 +112,16 @@ void readMessage(int socketDes, std::string handle, std::mutex lock){
 
 }
 
-void chatWithHost(int socketDes, struct addrinfo* res, std::string handle){
+void test(int test, const std::string& handle, std::mutex &lock){
+
+}
+
+void chatWithHost(int socketDes, struct addrinfo* res, const std::string& handle){
 
     std::mutex lock;
 
-    std::thread writer(writeMessage, socketDes, handle, lock);
-    std::thread reader(readMessage, socketDes, handle, lock);
-
+    std::thread writer(writeMessage, socketDes, std::ref(handle), std::ref(lock));
+    std::thread reader(readMessage, socketDes, std::ref(handle), std::ref(lock));
 
     writer.join();
     reader.join();
