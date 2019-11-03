@@ -1,12 +1,13 @@
+/*
+Neal Kornreich
+CS372 -Fall 2019
+Server side of chat application
+11/03/2019
+ */
+
 import java.io.*;
 import java.net.*;
-import java.text.ParseException;
 import java.util.Scanner;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ChatServe {
 
@@ -42,7 +43,7 @@ public class ChatServe {
                 String outputLine;
                 Scanner scanner = new Scanner(System.in);
 
-               
+
                 while (true) {
                     /*
                     Reads socket for clients message
