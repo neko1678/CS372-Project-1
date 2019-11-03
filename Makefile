@@ -1,4 +1,4 @@
 default: ChatClient.cpp
-	gcc -o ChatClient ChatClient.c
+	g++ -o ChatClient ChatClient.cpp
 clean:
 	rm ChatClient
