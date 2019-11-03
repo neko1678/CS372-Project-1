@@ -9,7 +9,6 @@
 
 /*Taken directly from Beej Guide with some minor modifications
  * Gets a struct with the address information from the system
- *
 */
 struct addrinfo * getAddressInfo(char* hostName, char* portNumber) {
     int status;
@@ -66,6 +65,9 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
+/*
+ * primary function in which chat occurs
+ */
 void chatWithHost(int socketDes, std::string username){
     std::string output;
     char outputBuffer[513];
@@ -78,8 +80,13 @@ void chatWithHost(int socketDes, std::string username){
     while(1){
         std::cout << username;
 
+        //Gets input from commandline
         getline(std::cin, output);
-
+        
+        /*
+         * Checks for quit message
+         * If is - notify server, close socket, exit
+         */
         if(output.compare("\\quit") == 0){
             output.append("\n");
             strcpy(outputBuffer, output.c_str());
@@ -88,6 +95,9 @@ void chatWithHost(int socketDes, std::string username){
             close(socketDes);
             exit(0);
         }
+        /*
+         * writes message to server
+         */
         else{
             output.append("\n");
             std::string outputWithHandle = username;
@@ -96,6 +106,11 @@ void chatWithHost(int socketDes, std::string username){
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
         }
 
+        /*
+         * Waits to recieve messages
+         * Checks for quit message - if so close and exit
+         * Print message
+         */
         recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
         if(strstr(inputBuffer, "\\quit") != 0){
             printf("Server quit. Closing program...");
@@ -106,13 +121,17 @@ void chatWithHost(int socketDes, std::string username){
             printf("%s", inputBuffer);
         }
 
+        //Clears buffers
         memset(outputBuffer, 0 ,sizeof(outputBuffer));
         memset(inputBuffer, 0, sizeof(inputBuffer));
     }
 }
 
 
-
+/*
+ * Gets handle from command line
+ * Returns string of handle
+ */
 std::string getHandle(){
     printf("Enter username: ");
 
@@ -134,7 +153,6 @@ int main(int argc, char *argv[]) {
     //Set up and connect
     struct addrinfo* res = getAddressInfo(argv[1], argv[2]);
     int socketDes = createSocket(res);
-    connectToHost(res, socketDes);
 
     std::string handle = getHandle();
 
