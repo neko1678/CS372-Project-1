@@ -77,7 +77,9 @@ void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
         std::cout << handle;
 
         getline(std::cin, output);
-        
+
+        std::cout << "Got input\n";
+
         if(output.compare("/quit") == 0){
             char* outputBuffer = new char[output.size()+1];
             strcpy(outputBuffer, output.c_str());
@@ -91,6 +93,7 @@ void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
             outputWithHandle.append(output);
             char* outputBuffer = new char[outputWithHandle.size()+1];
             strcpy(outputBuffer, outputWithHandle.c_str());
+            std::cout << "Sending message\n";
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
         }
 
