@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iostream>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <cstring>
@@ -67,7 +66,7 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
-void chatWithHost(int socketDes, struct addrinfo* res, const std::string& handle){
+void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
     char outputBuffer[500];
     char inputBuffer[500];
 
@@ -92,22 +91,16 @@ void chatWithHost(int socketDes, struct addrinfo* res, const std::string& handle
             exit(0);
         }
         else{
-            printf(inputBuffer);
+            printf("%s", inputBuffer);
         }
     }
 }
 
 
 
-std::string getHandle(){
-    char userName[10];
+void setHandle(char* username){
     printf("Enter username: ");
-    scanf("%s", userName);
-
-    std::string handle = userName;
-    handle.append("> ");
-
-    return handle;
+    scanf("%s", username);
 }
 
 int main(int argc, char *argv[]) {
@@ -124,7 +117,8 @@ int main(int argc, char *argv[]) {
     int socketDes = createSocket(res);
     connectToHost(res, socketDes);
 
-    std::string handle = getHandle();
+    char handle[10];
+    setHandle(handle);
 
     chatWithHost(socketDes, res, handle);
 
