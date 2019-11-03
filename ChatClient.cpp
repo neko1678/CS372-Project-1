@@ -174,6 +174,7 @@ int main(int argc, char *argv[]) {
     //Set up and connect
     struct addrinfo* res = getAddressInfo(argv[1], argv[2]);
     int socketDes = createSocket(res);
+    connectToHost(res, socketDes);
 
     std::string handle = getHandle();
 
