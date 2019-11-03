@@ -68,20 +68,21 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
 
 void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
     std::string output;
+    char outputBuffer[500];
+    memset(outputBuffer, 0 ,sizeof(outputBuffer));
+
     char inputBuffer[500];
 
-    std::string handle = "> ";
-    handle.append(username);
+    username.append("> ");
 
     while(1){
-        std::cout << handle;
+        std::cout << username;
 
         getline(std::cin, output);
 
         std::cout << "Got input\n";
 
         if(output.compare("/quit") == 0){
-            char* outputBuffer = new char[output.size()+1];
             strcpy(outputBuffer, output.c_str());
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
             printf("Closing program...");
@@ -89,9 +90,8 @@ void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
             exit(0);
         }
         else{
-            std::string outputWithHandle = handle;
+            std::string outputWithHandle = username;
             outputWithHandle.append(output);
-            char* outputBuffer = new char[outputWithHandle.size()+1];
             strcpy(outputBuffer, outputWithHandle.c_str());
             std::cout << "Sending message\n";
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
@@ -108,6 +108,8 @@ void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
         else{
             printf("%s", inputBuffer);
         }
+
+        memset(outputBuffer, 0 ,sizeof(outputBuffer));
     }
 }
 
