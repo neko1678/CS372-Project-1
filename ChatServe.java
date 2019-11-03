@@ -20,9 +20,13 @@ public class ChatServe {
     /*
     From https://docs.oracle.com/javase/tutorial/networking/sockets/clientServer.htm
     Creates socket, waits for a client to connect, begins chat
+    Loops for new connection if client quits
      */
     private static void chat(int portNumber, String handle){
         while(true) {
+            /*
+            Waits for client connection
+             */
             try (ServerSocket serverSocket = new ServerSocket(portNumber);
                  Socket clientSocket = serverSocket.accept();
                  PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -38,7 +42,11 @@ public class ChatServe {
                 String outputLine;
                 Scanner scanner = new Scanner(System.in);
 
+               
                 while (true) {
+                    /*
+                    Reads socket for clients message
+                    */
                     if ((inputLine = in.readLine()) != null) {
                         //If quit message is received terminate program
                         if (inputLine.contains("\\quit")) {
@@ -50,13 +58,17 @@ public class ChatServe {
                     }
 
                     System.out.print(handle);
-                    outputLine = scanner.next();
+                    /*
+                    Reads message from command line
+                    Sends to client
+                    Handles quit message - break inner loop and await new connection
+                     */
+                    outputLine = scanner.nextLine();
                     if (outputLine.equals("\\quit")) {
                         System.out.println("Closing program...");
                         out.println(outputLine);
                         System.exit(0);
                     } else {
-                        System.out.println("Sending message: " + outputLine);
                         out.println(handle + outputLine);
                     }
                 }
@@ -96,7 +108,10 @@ public class ChatServe {
         return portNumber;
     }
 
-
+    /*
+    Gets username from commandline
+    Checks length
+     */
     private static String getHandle(){
         String handle;
         Scanner scanner = new Scanner(System.in);
