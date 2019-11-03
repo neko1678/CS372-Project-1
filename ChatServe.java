@@ -130,12 +130,11 @@ public class ChatServe {
     If not there request input from terminal
      */
     private static int getPortNumber(String[] args){
-
         int portNumber;
 
-        if(args == null) {
+        if(args == null || args.length < 1) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Please enter port number:");
+            System.out.println("Please enter port number: ");
             portNumber = scanner.nextInt();
         }
         else {
@@ -144,7 +143,7 @@ public class ChatServe {
             } catch (NumberFormatException e) {
                 Scanner scanner = new Scanner(System.in);
                 System.err.println("Invalid Port Number");
-                System.out.println("Please enter port number:");
+                System.out.println("Please enter port number: ");
                 portNumber = scanner.nextInt();
             }
         }
@@ -168,3 +167,5 @@ public class ChatServe {
         return handle;
     }
 }
+
+
