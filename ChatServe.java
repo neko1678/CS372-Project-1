@@ -39,7 +39,9 @@ public class ChatServe {
 
             while(true){
 
+                System.out.println("Rerunnning loop");
                 if ((inputLine = in.readLine()) != null) {
+                    System.out.println("In recieved");
                     //If quit message is received terminate program
                     if (inputLine.equals("\\quit")) {
                         System.out.println("Client has disconnected. Closing program...");
@@ -47,7 +49,7 @@ public class ChatServe {
                     }
                     else {
                         System.out.println(inputLine);
-                        System.out.println(handle);
+                        System.out.print(handle);
                     }
                 }
 
@@ -60,9 +62,7 @@ public class ChatServe {
                 }
                 else{
                     out.write(handle + outputLine);
-                    System.out.print(handle);
                 }
-
             }
 
 
@@ -76,58 +76,6 @@ public class ChatServe {
 
     }
 
-    private static void readMessages(BufferedReader in, String handle, Lock lock) throws IOException{
-        String inputLine;
-
-        //Used to clear user's handle from screen when new message arrives from client
-        String clearMessage = "";
-        for(int i = 0; i<handle.length(); i++){
-            clearMessage += "\\b";
-        }
-
-        while (true) {
-            if ((inputLine = in.readLine()) != null) {
-                lock.lock();
-
-                System.out.print(clearMessage);
-
-                //If quit message is received terminate program
-                if (inputLine.equals("\\quit")) {
-                    System.out.println("Client has disconnected. Closing program...");
-                    System.exit(0);
-                }
-                else {
-                    System.out.println(inputLine);
-                    System.out.println(handle);
-                }
-
-                lock.unlock();
-            }
-        }
-    }
-
-    private static void writeMessages(PrintWriter out, String handle, Lock lock) throws IOException{
-        Scanner scanner = new Scanner(System.in);
-        String outputLine;
-
-        while(true){
-            outputLine = scanner.next();
-
-            lock.lock();
-            if (outputLine.equals("\\quit")) {
-                System.out.println("Closing program...");
-                out.write("\\quit");
-                System.exit(0);
-            }
-            else{
-                out.write(outputLine);
-                System.out.print(handle);
-            }
-            lock.unlock();
-        }
-
-    }
-
     /*
     Retrieves port number from first arg
     If not there request input from terminal
@@ -137,7 +85,7 @@ public class ChatServe {
 
         if(args == null || args.length < 1) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Please enter port number: ");
+            System.out.print("Please enter port number: ");
             portNumber = scanner.nextInt();
         }
         else {
@@ -146,7 +94,7 @@ public class ChatServe {
             } catch (NumberFormatException e) {
                 Scanner scanner = new Scanner(System.in);
                 System.err.println("Invalid Port Number");
-                System.out.println("Please enter port number: ");
+                System.out.print("Please enter port number: ");
                 portNumber = scanner.nextInt();
             }
         }
@@ -159,7 +107,7 @@ public class ChatServe {
         String handle;
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Please enter username: ");
+        System.out.print("Please enter username: ");
         handle = scanner.next();
 
         while (handle.length()>10){
