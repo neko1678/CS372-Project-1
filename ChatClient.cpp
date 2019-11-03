@@ -69,7 +69,7 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
 void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
     std::string output;
     char outputBuffer[500];
-    memset(outputBuffer, 0 ,sizeof(outputBuffer));
+    memset(outputBuffer, 0, sizeof(outputBuffer));
 
     char inputBuffer[500];
 
@@ -93,11 +93,11 @@ void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
             std::string outputWithHandle = username;
             outputWithHandle.append(output);
             strcpy(outputBuffer, outputWithHandle.c_str());
+            printf("Message is %s\n", outputBuffer);
             std::cout << "Sending message\n";
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
+            std::cout << "Sent message\n";
         }
-
-        printf("Waiting for message");
 
         recv(socketDes, inputBuffer, 500, 0);
         if(strcmp(inputBuffer, "\\quit") == 0){
