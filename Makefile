@@ -1,4 +1,4 @@
 default: ChatClient.cpp
-	g++ -std=c++11 -pthread ChatClient.cpp
+	gcc -o ChatClient ChatClient.c
 clean:
 	rm ChatClient
