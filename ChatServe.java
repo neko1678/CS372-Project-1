@@ -36,50 +36,64 @@ public class ChatServe {
 
                 System.out.println("Connected to client");
 
-
                 handle += "> ";
-
-                String inputLine;
-                String outputLine;
-                Scanner scanner = new Scanner(System.in);
-
-
+                
+                /*
+                Chat with client
+                 */
                 while (true) {
-                    /*
-                    Reads socket for clients message
-                    */
-                    if ((inputLine = in.readLine()) != null) {
-                        //If quit message is received terminate program
-                        if (inputLine.contains("\\quit")) {
-                            System.out.println("Client has disconnected.");
-                            break;
-                        } else {
-                            System.out.println(inputLine);
-                        }
-                    }
+                    
+                    //Break if client sent \quit
+                    if(!readMessage(in)){
+                        break;
+                    }                 
 
                     System.out.print(handle);
-                    /*
-                    Reads message from command line
-                    Sends to client
-                    Handles quit message - break inner loop and await new connection
-                     */
-                    outputLine = scanner.nextLine();
-                    if (outputLine.equals("\\quit")) {
-                        System.out.println("Closing program...");
-                        out.println(outputLine);
-                        System.exit(0);
-                    } else {
-                        out.println(handle + outputLine);
-                    }
+                    
+                    sendMessage(out, handle);
                 }
-
 
             } catch (IOException e) {
                 System.err.println("IOException");
                 //Terminates the program
                 System.exit(1);
             }
+        }
+    }
+    
+    /*
+    Returns false if client quit
+    Reads socket for clients message
+    Prints message
+     */
+    private static boolean readMessage(BufferedReader in) throws IOException{
+        String inputLine = in.readLine();
+        if (inputLine != null) {
+            //If quit message is received terminate program
+            if (inputLine.contains("\\quit")) {
+                System.out.println("Client has disconnected.");
+                return false;
+            } else {
+                System.out.println(inputLine);
+            }
+        }
+        return true;
+    }
+    
+    /*
+    Reads message from command line
+    Sends to client
+    Handles quit message
+    */
+    private static void sendMessage(PrintWriter out, String handle){
+        Scanner scanner = new Scanner(System.in);
+        String outputLine = scanner.nextLine();
+        if (outputLine.equals("\\quit")) {
+            System.out.println("Closing program...");
+            out.println(outputLine);
+            System.exit(0);
+        } else {
+            out.println(handle + outputLine);
         }
     }
 
