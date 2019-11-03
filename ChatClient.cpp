@@ -6,8 +6,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <thread>
-#include <mutex>
 
 
 /*Taken directly from Beej Guide with some minor modifications
@@ -69,13 +67,14 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
-void writeMessage(int socketDes, const std::string& handle, std::mutex &lock){
+void chatWithHost(int socketDes, struct addrinfo* res, const std::string& handle){
     char outputBuffer[500];
+    char inputBuffer[500];
 
     while(1){
+        printf("Enter message: ");
         scanf("%s", outputBuffer);
 
-        lock.lock();
         if(strcmp(outputBuffer, "\\quit") == 0){
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
             printf("Closing program...");
@@ -83,21 +82,10 @@ void writeMessage(int socketDes, const std::string& handle, std::mutex &lock){
             exit(0);
         }
         else{
-            //TODO add handle
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
         }
-        lock.unlock();
 
-    }
-}
-
-void readMessage(int socketDes,const std::string& handle, std::mutex &lock){
-    char inputBuffer[500];
-
-    while(1){
         recv(socketDes, inputBuffer, 500, 0);
-
-        lock.lock();
         if(strcmp(inputBuffer, "\\quit") == 0){
             printf("Server quit. Closing program...");
             close(socketDes);
@@ -106,28 +94,7 @@ void readMessage(int socketDes,const std::string& handle, std::mutex &lock){
         else{
             printf(inputBuffer);
         }
-        lock.unlock();
-
     }
-
-}
-
-void test(int test, const std::string& handle, std::mutex &lock){
-
-}
-
-void chatWithHost(int socketDes, struct addrinfo* res, const std::string& handle){
-
-    std::mutex lock;
-
-    std::thread writer(writeMessage, socketDes, std::ref(handle), std::ref(lock));
-    std::thread reader(readMessage, socketDes, std::ref(handle), std::ref(lock));
-
-    writer.join();
-    reader.join();
-
-    //Unreachable due to infinite loops in threads but good habit
-    close(socketDes);
 }
 
 
