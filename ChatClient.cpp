@@ -67,13 +67,16 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
 }
 
 void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
-    char outputBuffer[500];
+    char * outputBuffer;
     char inputBuffer[500];
+    size_t outputBufferSize = 500;
 
     while(1){
+        printf("Testing");
         printf("%s> ", handle);
-        
-        fgets(outputBuffer, 500, stdin);
+        printf("Here");
+
+        getline(&outputBuffer, &outputBufferSize, stdin);
 
         printf("Scanned");
 
