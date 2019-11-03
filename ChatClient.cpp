@@ -80,8 +80,6 @@ void chatWithHost(int socketDes, std::string username){
 
         getline(std::cin, output);
 
-        std::cout << "Got input\n";
-
         if(output.compare("\\quit") == 0){
             output.append("\n");
             strcpy(outputBuffer, output.c_str());
@@ -95,23 +93,16 @@ void chatWithHost(int socketDes, std::string username){
             std::string outputWithHandle = username;
             outputWithHandle.append(output);
             strcpy(outputBuffer, outputWithHandle.c_str());
-            printf("Message is %s\n", outputBuffer);
-            std::cout << "Sending message\n";
             send(socketDes, outputBuffer, strlen(outputBuffer), 0);
-            std::cout << "Sent message\n";
         }
 
         recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
-        std::cout << "Recieved message\n";
         if(strstr(inputBuffer, "\\quit") != 0){
             printf("Server quit. Closing program...");
             close(socketDes);
             exit(0);
         }
         else{
-            std::cout << "Printing message\n";
-            std::cout << strlen(inputBuffer);
-            std::cout << inputBuffer;
             printf("%s", inputBuffer);
         }
 
