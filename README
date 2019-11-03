@@ -1,0 +1,14 @@
+Neal Kornreich
+CS372 - Fall 2019
+
+This program has been tested on the flip2 server.
+
+To compile on server:
+  -javac ChatServe.java
+  -java ChatServe [portnumber]
+  
+ To compile on client:
+   -make
+   Then run - example: ./ChatClient flip2.engr.oregonstate.edu 30021
+  
+  
