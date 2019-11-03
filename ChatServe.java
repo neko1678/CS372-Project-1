@@ -49,7 +49,6 @@ public class ChatServe {
                     }
                     else {
                         System.out.println(inputLine);
-                        System.out.print(handle);
                     }
                 }
 
