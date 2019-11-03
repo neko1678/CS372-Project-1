@@ -22,58 +22,55 @@ public class ChatServe {
     Creates socket, waits for a client to connect, begins chat
      */
     private static void chat(int portNumber, String handle){
-        try(ServerSocket serverSocket = new ServerSocket(portNumber);
-            Socket clientSocket = serverSocket.accept();
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()))){
+        while(true) {
+            try (ServerSocket serverSocket = new ServerSocket(portNumber);
+                 Socket clientSocket = serverSocket.accept();
+                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                 BufferedReader in = new BufferedReader(
+                         new InputStreamReader(clientSocket.getInputStream()))) {
 
-            System.out.println("Connected to client");
+                System.out.println("Connected to client");
 
 
-            handle += "> ";
+                handle += "> ";
 
-            String inputLine;
-            String outputLine;
-            Scanner scanner = new Scanner(System.in);
+                String inputLine;
+                String outputLine;
+                Scanner scanner = new Scanner(System.in);
 
-            while(true){
+                while (true) {
 
-                System.out.println("Rerunnning loop");
-                if ((inputLine = in.readLine()) != null) {
-                    System.out.println("In recieved");
-                    //If quit message is received terminate program
-                    if (inputLine.contains("\\quit")) {
-                        System.out.println("Client has disconnected. Closing program...");
+                    System.out.println("Rerunnning loop");
+                    if ((inputLine = in.readLine()) != null) {
+                        System.out.println("In recieved");
+                        //If quit message is received terminate program
+                        if (inputLine.contains("\\quit")) {
+                            System.out.println("Client has disconnected.");
+                            break;
+                        } else {
+                            System.out.println(inputLine);
+                        }
+                    }
+
+                    System.out.print(handle);
+                    outputLine = scanner.next();
+                    if (outputLine.equals("\\quit")) {
+                        System.out.println("Closing program...");
+                        out.println(outputLine);
                         System.exit(0);
-                    }
-                    else {
-                        System.out.println(inputLine);
+                    } else {
+                        System.out.println("Sending message: " + outputLine);
+                        out.println(handle + outputLine);
                     }
                 }
 
-                System.out.print(handle);
-                outputLine = scanner.next();
-                if (outputLine.equals("\\quit")) {
-                    System.out.println("Closing program...");
-                    out.println(outputLine);
-                    System.exit(0);
-                }
-                else{
-                    System.out.println("Sending message: " + outputLine);
-                    out.println(handle + outputLine);
-                }
+
+            } catch (IOException e) {
+                System.err.println("IOException");
+                //Terminates the program
+                System.exit(1);
             }
-
-
-
         }
-        catch (IOException e){
-            System.err.println("IOException");
-            //Terminates the program
-            System.exit(1);
-        }
-
     }
 
     /*
