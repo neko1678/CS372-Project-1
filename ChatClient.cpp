@@ -66,12 +66,12 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
-void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
+void chatWithHost(int socketDes, std::string username){
     std::string output;
     char outputBuffer[500];
     memset(outputBuffer, 0, sizeof(outputBuffer));
-
     char inputBuffer[500];
+    memset(inputBuffer, 0, sizeof(inputBuffer));
 
     username.append("> ");
 
@@ -100,7 +100,8 @@ void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
             std::cout << "Sent message\n";
         }
 
-        recv(socketDes, inputBuffer, 500, 0);
+        recv(socketDes, inputBuffer, strlen(inputBuffer), 0);
+        std::cout << "Recieved message\n";
         if(strcmp(inputBuffer, "\\quit") == 0){
             printf("Server quit. Closing program...");
             close(socketDes);
@@ -111,6 +112,7 @@ void chatWithHost(int socketDes, struct addrinfo* res, std::string username){
         }
 
         memset(outputBuffer, 0 ,sizeof(outputBuffer));
+        memset(inputBuffer, 0, sizeof(inputBuffer));
     }
 }
 
@@ -141,7 +143,7 @@ int main(int argc, char *argv[]) {
 
     std::string handle = getHandle();
 
-    chatWithHost(socketDes, res, handle);
+    chatWithHost(socketDes, handle);
 
     return 0;
 }
