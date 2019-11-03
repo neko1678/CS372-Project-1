@@ -71,7 +71,7 @@ void chatWithHost(int socketDes, struct addrinfo* res, char* handle){
     char inputBuffer[500];
 
     while(1){
-        printf("Enter message: ");
+        printf("%s> ", handle);
         scanf("%s", outputBuffer);
 
         if(strcmp(outputBuffer, "\\quit") == 0){
