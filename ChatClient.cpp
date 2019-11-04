@@ -104,23 +104,6 @@ void writeMessage(std::string username, char* outputBuffer, int socketDes){
 }
 
 /*
-* Waits to recieve messages
-* Checks for quit message - if so close and exit
-* Print message
-*/
-void readMessage(int socketDes, char* inputBuffer){
-    recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
-    if(strstr(inputBuffer, "\\quit") != 0){
-        printf("Server quit. Closing program...");
-        close(socketDes);
-        exit(0);
-    }
-    else{
-        printf("%s", inputBuffer);
-    }
-}
-
-/*
  * Primary function in which chat occurs
  * Takes socket description and username as inputs
  */
@@ -138,7 +121,20 @@ void chatWithHost(int socketDes, std::string username){
 
         writeMessage(username, outputBuffer, socketDes);
 
-        readMessage(socketDes, inputBuffer);
+        /*
+        * Waits to recieve messages
+        * Checks for quit message - if so close and exit
+        * Print message
+        */
+        recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
+        if(strstr(inputBuffer, "\\quit") != 0){
+            printf("Server quit. Closing program...");
+            close(socketDes);
+            exit(0);
+        }
+        else{
+            printf("%s", inputBuffer);
+        }
 
         memset(outputBuffer, 0 ,sizeof(outputBuffer));
         memset(inputBuffer, 0, sizeof(inputBuffer));
