@@ -25,6 +25,8 @@ public class ChatServe {
      */
     private static void chat(int portNumber, String handle){
         while(true) {
+            handle += "> ";
+
             /*
             Waits for client connection
              */
@@ -36,20 +38,18 @@ public class ChatServe {
 
                 System.out.println("Connected to client");
 
-                handle += "> ";
-                
                 /*
                 Chat with client
                  */
                 while (true) {
-                    
+
                     //Break if client sent \quit
                     if(!readMessage(in)){
                         break;
-                    }                 
+                    }
 
                     System.out.print(handle);
-                    
+
                     sendMessage(out, handle);
                 }
 
@@ -60,7 +60,7 @@ public class ChatServe {
             }
         }
     }
-    
+
     /*
     Returns false if client quit
     Reads socket for clients message
@@ -79,7 +79,7 @@ public class ChatServe {
         }
         return true;
     }
-    
+
     /*
     Reads message from command line
     Sends to client
