@@ -24,9 +24,9 @@ public class ChatServe {
     Loops for new connection if client quits
      */
     private static void chat(int portNumber, String handle){
+        handle += "> ";
+        
         while(true) {
-            handle += "> ";
-
             /*
             Waits for client connection
              */
