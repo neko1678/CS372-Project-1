@@ -116,7 +116,6 @@ void readMessage(int socketDes, char* inputBuffer){
         exit(0);
     }
     else{
-        std::cout << inputBuffer;
         printf("%s", inputBuffer);
     }
 }
@@ -139,15 +138,7 @@ void chatWithHost(int socketDes, std::string username){
 
         writeMessage(username, outputBuffer, socketDes);
 
-        recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
-        if(strstr(inputBuffer, "\\quit") != 0){
-            printf("Server quit. Closing program...");
-            close(socketDes);
-            exit(0);
-        }
-        else{
-            printf("%s", inputBuffer);
-        }
+        readMessage(socketDes, inputBuffer);
 
         memset(outputBuffer, 0 ,sizeof(outputBuffer));
         memset(inputBuffer, 0, sizeof(inputBuffer));
