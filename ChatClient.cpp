@@ -137,23 +137,7 @@ void chatWithHost(int socketDes, std::string username){
     while(1){
         std::cout << username;
 
-        getline(std::cin, output);
-
-        if(output.compare("\\quit") == 0){
-            output.append("\n");
-            strcpy(outputBuffer, output.c_str());
-            send(socketDes, outputBuffer, strlen(outputBuffer), 0);
-            printf("Closing program...");
-            close(socketDes);
-            exit(0);
-        }
-        else{
-            output.append("\n");
-            std::string outputWithHandle = username;
-            outputWithHandle.append(output);
-            strcpy(outputBuffer, outputWithHandle.c_str());
-            send(socketDes, outputBuffer, strlen(outputBuffer), 0);
-        }
+        writeMessage(username, outputBuffer, socketDes);
 
         recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
         if(strstr(inputBuffer, "\\quit") != 0){
