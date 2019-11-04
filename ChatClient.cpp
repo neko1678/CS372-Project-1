@@ -134,7 +134,7 @@ void chatWithHost(int socketDes, std::string username){
     username.append("> ");
 
     while(1){
-        std::cout << username;
+        printf("%s", username.c_str());
 
         writeMessage(username, outputBuffer, socketDes);
 
