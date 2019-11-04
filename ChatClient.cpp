@@ -1,3 +1,10 @@
+/*
+Neal Kornreich
+CS372 -Fall 2019
+Client side of chat application
+11/03/2019
+ */
+
 #include <iostream>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -8,8 +15,8 @@
 
 
 /*Taken directly from Beej Guide with some minor modifications
+ * Takes character array of hostname and port number
  * Gets a struct with the address information from the system
- *
 */
 struct addrinfo * getAddressInfo(char* hostName, char* portNumber) {
     int status;
@@ -50,7 +57,7 @@ int createSocket(struct addrinfo* addressInfo){
 }
 
 /* From Beej guide
- * Takes struct addrinfo
+ * Takes struct addrinfo and socket description
  * Exits with error if fails
 */
 void connectToHost(struct addrinfo* addressInfo, int socketDes){
@@ -66,6 +73,58 @@ void connectToHost(struct addrinfo* addressInfo, int socketDes){
     printf("Connected to host\n");
 }
 
+/*
+ * Takes username buffer and socket description
+ * writes message to server
+ */
+void writeMessage(std::string username, char* outputBuffer, int socketDes){
+    std::string output;
+
+    getline(std::cin, output);
+
+    /*
+     * Checks for quit message
+     * If is - notify server, close socket, exit
+     */
+    if(output.compare("\\quit") == 0){
+        output.append("\n");
+        strcpy(outputBuffer, output.c_str());
+        send(socketDes, outputBuffer, strlen(outputBuffer), 0);
+        printf("Closing program...");
+        close(socketDes);
+        exit(0);
+    }
+    else{
+        output.append("\n");
+        std::string outputWithHandle = username;
+        outputWithHandle.append(output);
+        strcpy(outputBuffer, outputWithHandle.c_str());
+        send(socketDes, outputBuffer, strlen(outputBuffer), 0);
+    }
+}
+
+/*
+* Waits to recieve messages
+* Checks for quit message - if so close and exit
+* Print message
+*/
+void readMessage(int socketDes, char* inputBuffer){
+    recv(socketDes, inputBuffer, sizeof(inputBuffer), 0);
+    if(strstr(inputBuffer, "\\quit") != 0){
+        printf("Server quit. Closing program...");
+        close(socketDes);
+        exit(0);
+    }
+    else{
+        std::cout << inputBuffer;
+        printf("%s", inputBuffer);
+    }
+}
+
+/*
+ * Primary function in which chat occurs
+ * Takes socket description and username as inputs
+ */
 void chatWithHost(int socketDes, std::string username){
     std::string output;
     char outputBuffer[513];
@@ -112,7 +171,10 @@ void chatWithHost(int socketDes, std::string username){
 }
 
 
-
+/*
+ * Gets handle from command line
+ * Returns string of handle
+ */
 std::string getHandle(){
     printf("Enter username: ");
 
